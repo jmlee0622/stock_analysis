@@ -1,0 +1,52 @@
+.price-page {
+    padding: 24px 32px;
+}
+
+.price-page h2 {
+    color: white;
+    margin-bottom: 4px;
+}
+
+.refresh-info {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 24px;
+}
+
+.loading {
+    color: #aaa;
+}
+
+.price-list {
+    display: flex;
+    gap: 20px;
+}
+
+.price-card {
+    background: #1e1e2e;
+    border-radius: 16px;
+    padding: 28px 32px;
+    border: 1px solid #2a2a3e;
+    min-width: 240px;
+}
+
+.price-symbol {
+    color: #aaa;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.price-value {
+    color: #51cf66;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.price-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #666;
+    font-size: 13px;
+}
