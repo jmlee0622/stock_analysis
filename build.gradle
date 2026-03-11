@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'stock_analysis'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'dev.langchain4j:langchain4j:0.35.0'
+    implementation 'dev.langchain4j:langchain4j-anthropic:0.35.0'
+    implementation 'dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0'
+    implementation 'dev.langchain4j:langchain4j-chroma:0.35.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+}
