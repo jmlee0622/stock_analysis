@@ -1,0 +1,69 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stockdb
+    username: stock
+    password: CHANGE_ME
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+  config:
+    import: optional:classpath:application-local.yml   # 로컬 시크릿 파일 로드 (gitignore됨)
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 5000          # 기본 TTL: 5초 (시세용)
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: stock-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+jwt:
+  secret: CHANGE_ME
+  expiration: 86400000   # 24시간 (ms)
+
+finnhub:
+  api-key: CHANGE_ME
+  websocket-url: wss://ws.finnhub.io
+  news-url: https://finnhub.io/api/v1/news
+
+claude:
+  api-key: CHANGE_ME
+  model: claude-sonnet-4-6
+
+chroma:
+  url: http://localhost:8000
+  collection: news-embeddings
+
+logging:
+  level:
+    org.springframework.cache: TRACE
+    org.springframework.data.redis: DEBUG
+    com.example.stock_analysis: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info
+  metrics:
+    tags:
+      application: stock-analysis
