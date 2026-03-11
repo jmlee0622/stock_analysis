@@ -1,0 +1,13 @@
+.app {
+    min-height: 100vh;
+    background: #13131f;
+}
+
+.main {
+    padding-top: 80px;
+    color: white;
+}
+
+.guide {
+    padding-left: 32px;
+}
