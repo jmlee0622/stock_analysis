@@ -7,6 +7,7 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,7 +48,12 @@ public class NewsService {
     }
 
     public void fetchAndAnalyzeNews() {
-        String url = newsUrl + "?category=crypto&token=" + apiKey;
+        fetchAndAnalyzeNews("crypto", "CRYPTO");
+    }
+
+    @CacheEvict(value = {"newsList", "newsByCategory", "newsBySentiment", "newsBySentimentAndCategory"}, allEntries = true)
+    public void fetchAndAnalyzeNews(String finnhubCategory, String saveCategory) {
+        String url = newsUrl + "?category=" + finnhubCategory + "&token=" + apiKey;
 
         FinnhubNewsDto[] newsDtos = restTemplate.getForObject(url, FinnhubNewsDto[].class);
 
@@ -79,6 +85,7 @@ public class NewsService {
                     .sentiment(result.getSentiment())
                     .sentimentReason(result.getReason())
                     .analyzedAt(Instant.now())
+                    .category(saveCategory)
                     .build();
 
             NewsArticle saved = newsArticleRepository.save(article);

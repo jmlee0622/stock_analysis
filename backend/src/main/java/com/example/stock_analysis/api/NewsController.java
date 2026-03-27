@@ -1,6 +1,7 @@
 package com.example.stock_analysis.api;
 
 import com.example.stock_analysis.domain.dto.NewsResponse;
+import com.example.stock_analysis.news.NewsService;
 import com.example.stock_analysis.news.NewsVectorService;
 import com.example.stock_analysis.service.NewsQueryService;
 import dev.langchain4j.data.segment.TextSegment;
@@ -8,6 +9,7 @@ import dev.langchain4j.store.embedding.EmbeddingMatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,15 +25,34 @@ public class NewsController {
 
     private final NewsQueryService newsQueryService;
     private final NewsVectorService newsVectorService;
+    private final NewsService newsService;
 
-    // GET /api/news                        → 전체 최신 뉴스
-    // GET /api/news?sentiment=POSITIVE     → 감성 필터링
+    // GET /api/news                                        → 전체 최신 뉴스
+    // GET /api/news?category=CRYPTO                       → 카테고리 필터
+    // GET /api/news?sentiment=POSITIVE                    → 감성 필터
+    // GET /api/news?sentiment=POSITIVE&category=CRYPTO    → 조합 필터
     @GetMapping
-    public ResponseEntity<List<NewsResponse>> getNews(@RequestParam(required = false) String sentiment) {
+    public ResponseEntity<List<NewsResponse>> getNews(
+            @RequestParam(required = false) String sentiment,
+            @RequestParam(required = false) String category) {
+        if (sentiment != null && category != null) {
+            return ResponseEntity.ok(newsQueryService.getNewsBySentimentAndCategory(sentiment, category));
+        }
+        if (category != null) {
+            return ResponseEntity.ok(newsQueryService.getNewsByCategory(category));
+        }
         if (sentiment != null) {
             return ResponseEntity.ok(newsQueryService.getNewsBySentiment(sentiment));
         }
         return ResponseEntity.ok(newsQueryService.getLatestNews());
+    }
+
+    // POST /api/news/fetch  → 코인/주식 뉴스 수집 및 감성 분석 수동 트리거
+    @PostMapping("/fetch")
+    public ResponseEntity<String> fetchNews() {
+        newsService.fetchAndAnalyzeNews("crypto", "CRYPTO");
+        newsService.fetchAndAnalyzeNews("general", "STOCK");
+        return ResponseEntity.ok("코인/주식 뉴스 수집 및 감성 분석 완료");
     }
 
     // POST /api/news/migrate  → 기존 뉴스를 ChromaDB로 마이그레이션

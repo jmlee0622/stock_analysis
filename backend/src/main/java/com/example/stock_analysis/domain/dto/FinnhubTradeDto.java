@@ -11,8 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class
-FinnhubTradeResponse {
+public class FinnhubTradeDto {
 
     @JsonProperty("type")
     private String type;

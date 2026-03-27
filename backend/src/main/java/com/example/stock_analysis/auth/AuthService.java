@@ -23,6 +23,7 @@ public class AuthService {
         User user = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
+                .provider("local")
                 .build();
         userRepository.save(user);
     }

@@ -17,7 +17,7 @@ public class TradeResponse implements Serializable {
     private Double volume;
     private Instant tradeTime;
 
-    private TradeResponse(String symbol, Double price, Double volume, Instant tradeTime) {
+    public TradeResponse(String symbol, Double price, Double volume, Instant tradeTime) {
         this.symbol = symbol;
         this.price = price;
         this.volume = volume;

@@ -14,9 +14,11 @@ public class NewsScheduler {
     private final NewsService newsService;
 
     // 앱 시작 후 10초 뒤 첫 실행, 이후 1시간마다 반복
-    // @Scheduled(initialDelay = 10000, fixedDelay = 3600000)  // API 비용 절약을 위해 비활성화
+    // @Scheduled(initialDelay = 10000, fixedDelay = 3600000)
     public void scheduleNewsFetch() {
-        log.info("===== 뉴스 수집 및 감성 분석 시작 =====");
-        newsService.fetchAndAnalyzeNews();
+        log.info("===== 코인 뉴스 수집 및 감성 분석 시작 =====");
+        newsService.fetchAndAnalyzeNews("crypto", "CRYPTO");
+        log.info("===== 주식 뉴스 수집 및 감성 분석 시작 =====");
+        newsService.fetchAndAnalyzeNews("general", "STOCK");
     }
 }

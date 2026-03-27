@@ -11,9 +11,15 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle, Long> 
     // newsId로 이미 저장된 뉴스인지 확인 (중복 방지)
     boolean existsByNewsId(Long newsId);
 
-    // 최신순 뉴스 조회 (sentiment 필터 없이)
+    // 최신순 뉴스 조회 (전체)
     List<NewsArticle> findTop20ByOrderByPublishedAtDesc();
 
-    // sentiment로 필터링해서 최신순 조회
+    // category 필터 최신순 조회
+    List<NewsArticle> findTop20ByCategoryOrderByPublishedAtDesc(String category);
+
+    // sentiment로 필터링해서 최신순 조회 (전체)
     List<NewsArticle> findTop20BySentimentOrderByPublishedAtDesc(String sentiment);
+
+    // sentiment + category 조합 필터
+    List<NewsArticle> findTop20BySentimentAndCategoryOrderByPublishedAtDesc(String sentiment, String category);
 }

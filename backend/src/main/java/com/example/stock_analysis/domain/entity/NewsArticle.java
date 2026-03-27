@@ -21,11 +21,13 @@ public class NewsArticle {
     @Column(unique = true)
     private Long newsId; // Finnhub 뉴스 ID (중복 저장 방지용)
 
+    @Column(columnDefinition = "TEXT")
     private String headline; // 뉴스 제목
 
     @Column(columnDefinition = "TEXT")
     private String summary; // 뉴스 내용 요약
 
+    @Column(columnDefinition = "TEXT")
     private String url;
 
     private String source; // 뉴스 출처 (Reuters, CoinDesk 등)
@@ -38,4 +40,6 @@ public class NewsArticle {
     private String sentimentReason; // 감성 판단 이유
 
     private Instant analyzedAt; // 감성 분석 수행 시각
+
+    private String category; // 뉴스 카테고리: CRYPTO / STOCK
 }

@@ -1,6 +1,6 @@
 package com.example.stock_analysis.kafka;
 
-import com.example.stock_analysis.domain.dto.FinnhubTradeResponse;
+import com.example.stock_analysis.domain.dto.FinnhubTradeDto;
 import com.example.stock_analysis.domain.entity.StockTrade;
 import com.example.stock_analysis.domain.repository.StockTradeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +32,7 @@ public class StockConsumer {
     @KafkaListener(topics = "stock-data", groupId = "stock-group")
     public void consume(String message) {
         try {
-            FinnhubTradeResponse response = objectMapper.readValue(message, FinnhubTradeResponse.class);
+            FinnhubTradeDto response = objectMapper.readValue(message, FinnhubTradeDto.class);
 
             if (!"trade".equals(response.getType()) || response.getData() == null) {
                 return;

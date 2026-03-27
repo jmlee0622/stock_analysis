@@ -19,9 +19,10 @@ public class NewsResponse implements Serializable {
     private String sentiment;
     private String sentimentReason;
     private Instant publishedAt;
+    private String category;
 
     private NewsResponse(String headline, String summary, String url, String source,
-                         String sentiment, String sentimentReason, Instant publishedAt) {
+                         String sentiment, String sentimentReason, Instant publishedAt, String category) {
         this.headline = headline;
         this.summary = summary;
         this.url = url;
@@ -29,6 +30,7 @@ public class NewsResponse implements Serializable {
         this.sentiment = sentiment;
         this.sentimentReason = sentimentReason;
         this.publishedAt = publishedAt;
+        this.category = category;
     }
 
     public static NewsResponse from(NewsArticle article) {
@@ -39,7 +41,8 @@ public class NewsResponse implements Serializable {
                 article.getSource(),
                 article.getSentiment(),
                 article.getSentimentReason(),
-                article.getPublishedAt()
+                article.getPublishedAt(),
+                article.getCategory()
         );
     }
 }
