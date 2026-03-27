@@ -1,11 +1,20 @@
 import { useState } from 'react';
 import api from '../api/axios';
-import './SearchPage.css';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-const SCORE_COLOR = (score) => {
-    if (score >= 0.85) return '#51cf66';
-    if (score >= 0.70) return '#ffd43b';
-    return '#aaa';
+const SENTIMENT_VARIANT = {
+    POSITIVE: 'default',
+    NEGATIVE: 'destructive',
+    NEUTRAL: 'secondary',
+};
+
+const scoreColor = (score) => {
+    if (score >= 0.85) return 'text-green-400';
+    if (score >= 0.70) return 'text-yellow-400';
+    return 'text-muted-foreground';
 };
 
 function SearchPage() {
@@ -30,46 +39,54 @@ function SearchPage() {
     };
 
     return (
-        <div className="search-page">
-            <h2>뉴스 유사도 검색</h2>
-            <p className="search-desc">키워드를 입력하면 의미적으로 유사한 뉴스를 찾아드립니다.</p>
+        <div className="space-y-6">
+            <div>
+                <h2 className="text-2xl font-bold">뉴스 유사도 검색</h2>
+                <p className="text-muted-foreground text-sm mt-1">
+                    키워드를 입력하면 의미적으로 유사한 뉴스를 찾아드립니다.
+                </p>
+            </div>
 
-            <form className="search-form" onSubmit={handleSearch}>
-                <input
+            <form onSubmit={handleSearch} className="flex gap-2">
+                <Input
                     type="text"
                     placeholder="예: bitcoin crash, ethereum regulation..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
+                    className="flex-1"
                 />
-                <button type="submit">검색</button>
+                <Button type="submit" disabled={loading}>
+                    {loading ? '검색 중...' : '검색'}
+                </Button>
             </form>
 
-            {loading && <p className="loading">검색 중...</p>}
-
             {!loading && searched && results.length === 0 && (
-                <p className="no-result">검색 결과가 없습니다.</p>
+                <p className="text-muted-foreground text-center py-12">검색 결과가 없습니다.</p>
             )}
 
             {!loading && results.length > 0 && (
-                <div className="search-results">
+                <div className="space-y-3">
                     {results.map((item, idx) => (
-                        <div key={idx} className="result-card">
-                            <div className="result-header">
-                                <span className={`badge ${item.sentiment?.toLowerCase()}`}>
-                                    {item.sentiment}
-                                </span>
-                                <span className="result-score" style={{ color: SCORE_COLOR(item.score) }}>
-                                    유사도 {(item.score * 100).toFixed(1)}%
-                                </span>
-                            </div>
-                            {item.url ? (
-                                <a href={item.url} target="_blank" rel="noreferrer" className="result-headline">
+                        <Card key={idx} className="hover:bg-accent/30 transition-colors">
+                            <CardContent className="pt-4 pb-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <Badge variant={SENTIMENT_VARIANT[item.sentiment] ?? 'secondary'}>
+                                        {item.sentiment}
+                                    </Badge>
+                                    <span className={`text-xs font-medium ${scoreColor(item.score)}`}>
+                                        유사도 {(item.score * 100).toFixed(1)}%
+                                    </span>
+                                </div>
+                                <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="font-medium text-foreground hover:text-primary transition-colors block"
+                                >
                                     {item.headline}
                                 </a>
-                            ) : (
-                                <p className="result-headline">{item.headline}</p>
-                            )}
-                        </div>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             )}
